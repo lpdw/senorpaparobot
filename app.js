@@ -2,15 +2,20 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var swig = require('swig');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var app = express();
+var swig = require('swig');
+var session = require('express-session');
+var methodOverride = require('method-override');
 
+
+var APIError = require('./lib/apiError');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
+var products = require('./routes/products');
 
+var app = express();
 // view engine setup
 // utilisation du moteur de swig pour les .html
 app.engine('html', swig.renderFile);
@@ -30,10 +35,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  if (!req.accepts('text/html') && !req.accepts('application/json')) {
+    return next(new APIError(406, 'Not valid type for asked resource'));
+  }
+  next();
+});
+
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/login', login);
+app.use('/products', products);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,7 +55,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -50,7 +63,10 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  if (req.accepts('text/html')) {
+    return res.render('error');
+  }
+  res.send(res.locals.message);
 });
 
 module.exports = app;

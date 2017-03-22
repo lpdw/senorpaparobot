@@ -3,19 +3,29 @@
 <head>
     <title>Demo Express.js</title>
     <meta charset="UTF-8">
-    <link href="./stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="container">
     <header class="navbar navbar-default" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/">Señor Papa Robot</a>
+                <a class="navbar-brand" href="/">Señor papa robot</a>
             </div>
             <div class="collapse navbar-collapse">
             </div>
         </div>
     </header>
+
+    {% if err %}
+        <section class="container">
+            <div class="alert-danger">
+                {{ err.message }}
+            </div>
+        </section>
+        <hr/>
+    {% endif %}
+
     {% block content %}{% endblock %}
 </div>
 </body>
