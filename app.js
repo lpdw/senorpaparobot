@@ -1,23 +1,58 @@
-'use strict';
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var swig = require('swig');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var app = express();
 
-var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
-module.exports = app; // for testing
+var index = require('./routes/index');
+var users = require('./routes/users');
+var login = require('./routes/login');
 
-var config = {
-  appRoot: __dirname // required config
-};
+// view engine setup
+// utilisation du moteur de swig pour les .html
+app.engine('html', swig.renderFile);
+// utiliser le moteur de template pour les .html
+app.set('view engine', 'html');
+// dossier des vues
+app.set('views', path.join(__dirname, 'views'));
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+// view cache
+app.set('view cache', false); // désactivation du cache express
+swig.setDefaults({ cache: false }); // désactivation du cache swig
 
-  // install middleware
-  swaggerExpress.register(app);
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-  var port = process.env.PORT || 10010;
-  app.listen(port);
+app.use('/', index);
+app.use('/users', users);
+app.use('/login', login);
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
-  }
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
+
+
