@@ -17,14 +17,7 @@
         </div>
     </header>
 
-    {% if err %}
-        <section class="container">
-            <div class="alert-danger">
-                {{ err.message }}
-            </div>
-        </section>
-        <hr/>
-    {% endif %}
+
 
     {% block content %}{% endblock %}
 </div>

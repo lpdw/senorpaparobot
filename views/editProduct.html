@@ -1,7 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
+    {% if err %}
+    <section class="container">
+        <div class="alert-danger">
+            {{ err.message }}
+        </div>
+    </section>
+    <hr/>
+    {% endif %}
     <form class="form-horizontal" method="POST" action="/products/{{ product.id }}?_method=put">
         {% include _formProduct %}
         <div class="form-group">

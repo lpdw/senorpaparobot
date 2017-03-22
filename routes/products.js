@@ -23,7 +23,21 @@ const productBodyVerification = (req, res, next) => {
     next();
 };
 
-router.get('/', productBodyVerification ,(req, res, next) => {
+router.post('/', productBodyVerification, (req, res, next) => {
+    return ProductService.create(req.body)
+        .then(product => {
+            if (req.accepts('text/html')) {
+                return res.redirect('/songs/' + product.id);
+            }
+            if (req.accepts('application/json')) {
+                return res.status(201).send(product);
+            }
+        })
+        .catch(next)
+        ;
+});
+
+router.get('/', (req, res, next) => {
     ProductService.find(req.query)
     .then(products => {
     if (req.accepts('text/html')){
