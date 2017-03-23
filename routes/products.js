@@ -1,7 +1,7 @@
 const express  = require('express');
 const _ = require('lodash');
 const router = express.Router();
-const ProductService = require('../services/products');
+const ProductService = require('../services/productService');
 const APIError = require('../lib/apiError');
 
 const productBodyVerification = (req, res, next) => {
@@ -27,7 +27,7 @@ router.post('/', productBodyVerification, (req, res, next) => {
     return ProductService.create(req.body)
         .then(product => {
             if (req.accepts('text/html')) {
-                return res.redirect('/songs/' + product.id);
+                return res.redirect('/products/' + product.id);
             }
             if (req.accepts('application/json')) {
                 return res.status(201).send(product);
@@ -40,12 +40,13 @@ router.post('/', productBodyVerification, (req, res, next) => {
 router.get('/', (req, res, next) => {
     ProductService.find(req.query)
     .then(products => {
-    if (req.accepts('text/html')){
-        return res.render('products', {products: products});
-    }
-    if (req.accepts('application/json')) {
-      return res.status(200).send(products);
-    }})
+        if (req.accepts('text/html')){
+            return res.render('products', {products: products});
+        }
+        if (req.accepts('application/json')) {
+          return res.status(200).send(products);
+        }
+    })
     .catch(next);
 });
 
@@ -77,13 +78,13 @@ router.get('/edit/:id', (req, res, next) => {
         return next(new APIError(406, 'Not valid type for asked resource'));
     }
     ProductService.findOneByQuery({id: req.params.id})
-    .then(product => {
-    if (!product){
-        return next(new APIError(404, 'No product found with id' + req.params.id));
-    }
-    return res.render('editProduct', {product, err});
-    })
-    .catch(next);
+        .then(product => {
+            if (!product){
+                return next(new APIError(404, 'No product found with id' + req.params.id));
+            }
+            return res.render('editProduct', {product, err});
+        })
+        .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {

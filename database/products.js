@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             validate: {notEmpty: {msg: "-> Missing type"}}
         },
         price: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DOUBLE,
             validate: {notEmpty: {msg: "-> Missing price"}}
         },
     });

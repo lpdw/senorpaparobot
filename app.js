@@ -4,9 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var swig = require('swig');
 var session = require('express-session');
 var methodOverride = require('method-override');
+
+var swig = require('swig');
 
 
 var APIError = require('./lib/apiError');
@@ -35,6 +36,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var sess = {
+  secret: 'social-music-api',
+  cookie: {},
+  resave: false,
+  saveUninitialized: true
+};
+app.use(session(sess));
+app.use(methodOverride('_method'));
+
 app.use((req, res, next) => {
   if (!req.accepts('text/html') && !req.accepts('application/json')) {
     return next(new APIError(406, 'Not valid type for asked resource'));
