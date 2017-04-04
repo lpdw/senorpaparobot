@@ -3,10 +3,10 @@ info:
   version: "0.0.1"
   title: Hello World App
 # during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths 
+host: senorpapa.herokuapp.com
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -16,45 +16,51 @@ consumes:
   - application/json
 # format of the responses to the client (Accepts)
 produces:
+  - text/html
   - application/json
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
+  /products:
     get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
+      summary: All stored products
+      description: |
+        The Products endpoint returns all the products stored in the database.
+      tags:
+        - Products
       responses:
-        "200":
-          description: Success
+        200:
+          description: An array of products
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
+            type: array
+            items:
+              $ref: '#/definitions/Products'
+        406:
+          description: Accept Header should be application/json or text/html
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: '#/definitions/Error'
+
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
+  Products:
+    type: object
     properties:
-      message:
+      id:
+        type: number
+        description: Id given by the database
+      name:
         type: string
-  ErrorResponse:
-    required:
-      - message
-    properties:
-      message:
+      quantity:
+        type: number
+      price:
+        type: number
+      type:
         type: string
+      createdAt:
+        type: string
+        format: date
+      updatedAt:
+        type: string
+        format: date
+  Error:
+    type: string
