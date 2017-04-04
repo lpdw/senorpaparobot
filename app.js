@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
+var cors = require('cors');
 
 var swig = require('swig');
 
@@ -17,6 +18,8 @@ var login = require('./routes/login');
 var products = require('./routes/products');
 
 var app = express();
+app.use(cors());
+
 // view engine setup
 // utilisation du moteur de swig pour les .html
 app.engine('html', swig.renderFile);
@@ -81,5 +84,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-
