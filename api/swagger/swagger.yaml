@@ -44,6 +44,197 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+    post:
+      summary: Create a product
+      description: This endpoint adds a new product on the database
+      parameters:
+      - in: body
+        name: body
+        description: Product object that needs to be added to the store
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            quantity:
+              type: number
+            price:
+              type: number
+            type:
+              type: string
+            createdAt:
+              type: string
+              format: date
+            updatedAt:
+              type: string
+              format: date
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
+      responses:
+        200:
+          description: The created product in HTML
+        201:
+          description: The created product
+          schema:
+            $ref: '#/definitions/Products'
+        400:
+          description: Error in body
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Accept Header should be application/json or text/html
+          schema:
+            $ref: '#/definitions/Error'
+
+    delete:
+      summary: Delete all products
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
+      responses:
+        204:
+          description: Nothing
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Accept Header should be application/json or text/html
+          schema:
+            $ref: '#/definitions/Error'
+
+  /products/{id}:
+    get:
+      summary: Return the product according to the given id
+      description: |
+        The product endpoint returns one song stored in the database based on the given id.
+      tags:
+        - products
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of product to return"
+        required: true
+        type: string
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
+      responses:
+        200:
+          description: An array of products
+          schema:
+            $ref: '#/definitions/Products'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Not Found Product
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Accept Header should be application/json or text/html
+          schema:
+            $ref: '#/definitions/Error'
+
+     put:
+      summary: update a product
+      description: |
+        The Products endpoint updates the product for the given id, with the given data.
+      tags:
+        - Products
+      parameters:
+      - name: id
+        in: path
+        description: ID of product to return
+        required: true
+        type: string
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
+      - in: body
+        name: body
+        description: Product object that needs to be added to the store
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            quantity:
+              type: number
+            price:
+              type: number
+            type:
+              type: string
+            createdAt:
+              type: string
+              format: date
+            updatedAt:
+              type: string
+              format: date
+      responses:
+        200:
+          description: The updated product
+          schema:
+            $ref: '#/definitions/Products'
+        400:
+          description: Error in body
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Not Found Product for the given Id
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Accept Header should be application/json or text/html
+          schema:
+            $ref: '#/definitions/Error'
+
+      delete:
+        summary: Delete the product according the given Id
+        parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of product to return"
+          required: true
+          type: "string"
+        - name: "authorization"
+          in: "header"
+          description: "Token for authorization"
+          required: false
+          type: string
+        responses:
+          204:
+            description: Nothing
+          401:
+            description: Unauthorized
+            schema:
+              $ref: '#/definitions/Error'
+          406:
+            description: Accept Header should be application/json or text/html
+            schema:
+              $ref: '#/definitions/Error'
+
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
