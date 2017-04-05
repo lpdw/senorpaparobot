@@ -141,4 +141,8 @@ router.get('/type/:type', (req, res) => {
 });
 
 
+// TODO : route requête post pour les commandes : récupérer le JSon, vérifier la quantité de chaque produit en base. Si OK : return statut 200 + envoi du colis (id commande + contenu de la commande) à eatDelivery.
+// eatDelivery renvoie un id de colis si OK ;
+// ensuite : retour de l'id du colis à BioSociety
+
 module.exports = router;

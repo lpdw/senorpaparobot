@@ -24,7 +24,6 @@ var authentication = require('./services/authentication');
 
 var app = express();
 
-
 app.use(cors());
 // view engine setup
 // utilisation du moteur de swig pour les .html
@@ -127,5 +126,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-
