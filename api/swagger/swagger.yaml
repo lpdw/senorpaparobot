@@ -2,8 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Hello World App
-# during dev, should point to your local machine
-host: senorpaparobot.herokuapp.com
+host: senorpapa.herokuapp.com
 # basePath prefixes all resource paths
 basePath: /
 #
@@ -26,6 +25,13 @@ paths:
         The Products endpoint returns all the products stored in the database.
       tags:
         - Products
+
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
       responses:
         200:
           description: An array of products
@@ -61,6 +67,7 @@ definitions:
         format: date
       updatedAt:
         type: string
+
         format: date
   Error:
     type: string

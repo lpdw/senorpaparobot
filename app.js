@@ -7,17 +7,15 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
 var cors = require('cors');
-
 var swig = require('swig');
-
 
 var APIError = require('./lib/apiError');
 var index = require('./routes/index');
 var users = require('./routes/users');
-var login = require('./routes/login');
-var products = require('./routes/products');
 var signup = require('./routes/signup');
+var login = require('./routes/login');
 var logout = require('./routes/logout');
+var products = require('./routes/products')
 
 var passport = require('passport');
 var authentication = require('./services/authentication');
@@ -25,17 +23,12 @@ var authentication = require('./services/authentication');
 var app = express();
 
 app.use(cors());
-// view engine setup
 // utilisation du moteur de swig pour les .html
 app.engine('html', swig.renderFile);
 // utiliser le moteur de template pour les .html
 app.set('view engine', 'html');
 // dossier des vues
 app.set('views', path.join(__dirname, 'views'));
-
-// view cache
-app.set('view cache', false); // désactivation du cache express
-swig.setDefaults({ cache: false }); // désactivation du cache swig
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -46,19 +39,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var sess = {
-  secret: 'senorpaparobot-api',
-  cookie: {},
-  resave: false,
-  saveUninitialized: true
+    secret: 'senorpaparobot-api',
+    cookie: {},
+    resave: false,
+    saveUninitialized: true
 };
 app.use(session(sess));
 app.use(methodOverride('_method'));
 
 app.use((req, res, next) => {
-  if (!req.accepts('text/html') && !req.accepts('application/json')) {
-    return next(new APIError(406, 'Not valid type for asked resource'));
-  }
-  next();
+    if (!req.accepts('text/html') && !req.accepts('application/json')) {
+        return next(new APIError(406, 'Not valid type for asked resource'));
+    }
+    next();
 });
 
 passport.serializeUser(function(user, done) {
@@ -99,10 +92,10 @@ app.all('*', verifyAuth);
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/products', products);
 app.use('/signup', signup);
 app.use('/login', login);
 app.use('/logout', logout);
+app.use('/products', products);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -15,9 +15,22 @@
             <div class="collapse navbar-collapse">
             </div>
         </div>
+        {% if userLogged  %}
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+        {% endif %}
     </header>
 
-
+    <section class="container">
+        <div class="alert-danger">
+            {{ err  }}
+        </div>
+    </section>
 
     {% block content %}{% endblock %}
 </div>

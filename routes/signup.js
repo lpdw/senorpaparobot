@@ -32,6 +32,7 @@ const bodyVerificator = (req, res, next) => {
     }
     if (req.accepts('text/html')) {
         req.session.err = error.message;
+        console.log( req.session.err);
         return res.redirect('/signup');
     }
     return next(error);
