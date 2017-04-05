@@ -32,6 +32,7 @@ sequelize.sync()
         console.log('DB loaded');
     })
 ;
-
+const Users = sequelize.import(path.join(__dirname, 'users'));
 const Products = sequelize.import(path.join(__dirname, 'products'));
+exports.Users = Users;
 exports.Products = Products;

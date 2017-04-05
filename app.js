@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
+var cors = require('cors');
 
 var swig = require('swig');
 
@@ -15,8 +16,16 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var products = require('./routes/products');
+var signup = require('./routes/signup');
+var logout = require('./routes/logout');
+
+var passport = require('passport');
+var authentication = require('./services/authentication');
 
 var app = express();
+
+
+app.use(cors());
 // view engine setup
 // utilisation du moteur de swig pour les .html
 app.engine('html', swig.renderFile);
@@ -38,7 +47,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var sess = {
-  secret: 'social-music-api',
+  secret: 'senorpaparobot-api',
   cookie: {},
   resave: false,
   saveUninitialized: true
@@ -53,31 +62,68 @@ app.use((req, res, next) => {
   next();
 });
 
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
+
+passport.use(authentication.senorPapaRobotLocalStrategy());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const verifyAuth = (req, res, next) => {
+    res.locals.userLogged = false;
+    if (req.originalUrl === '/signup' || req.originalUrl === '/login') {
+        return next();
+    }
+    if (req.get('authorization') === 'lpdw-2016') {
+        res.locals.userLogged = true;
+        return next();
+    }
+    if (req.isAuthenticated()) {
+        res.locals.userLogged = true;
+        return next();
+    }
+    if (req.accepts('text/html')) {
+        return res.redirect('/login');
+    }
+    if (req.accepts('application/json')) {
+        res.set('Location', '/login');
+        return res.status(401).send({err: 'User should be logged'});
+    }
+};
+app.all('*', verifyAuth);
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/login', login);
 app.use('/products', products);
-
+app.use('/signup', signup);
+app.use('/login', login);
+app.use('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
+
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  if (req.accepts('text/html')) {
-    return res.render('error');
-  }
-  res.send(res.locals.message);
+    // render the error page
+    res.status(err.status || 500);
+    if (req.accepts('text/html')) {
+        return res.render('error');
+    }
+    res.send(res.locals.message);
 });
 
 module.exports = app;

@@ -40,9 +40,9 @@ router.post('/', productBodyVerification, (req, res, next) => {
 router.get('/', (req, res, next) => {
     ProductService.find(req.query)
     .then(products => {
-        // if (req.accepts('text/html')){
-        //     return res.render('products', {products: products});
-        // }
+        if (req.accepts('text/html')){
+            return res.render('products', {products: products});
+        }
         if (req.accepts('application/json')) {
           return res.status(200).send(products);
         }
