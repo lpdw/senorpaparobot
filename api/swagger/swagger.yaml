@@ -150,7 +150,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-     put:
+    put:
       summary: update a product
       description: |
         The Products endpoint updates the product for the given id, with the given data.
@@ -209,31 +209,31 @@ paths:
           description: Accept Header should be application/json or text/html
           schema:
             $ref: '#/definitions/Error'
-
-      delete:
-        summary: Delete the product according the given Id
-        parameters:
-        - name: "id"
-          in: "path"
-          description: "ID of product to return"
-          required: true
-          type: "string"
-        - name: "authorization"
-          in: "header"
-          description: "Token for authorization"
-          required: false
-          type: string
-        responses:
-          204:
-            description: Nothing
-          401:
-            description: Unauthorized
-            schema:
-              $ref: '#/definitions/Error'
-          406:
-            description: Accept Header should be application/json or text/html
-            schema:
-              $ref: '#/definitions/Error'
+            
+    delete:
+      summary: Delete the product according the given Id
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of product to return"
+        required: true
+        type: "string"
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: false
+        type: string
+      responses:
+        204:
+          description: Nothing
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Accept Header should be application/json or text/html
+          schema:
+            $ref: '#/definitions/Error'
 
   /swagger:
     x-swagger-pipe: swagger_raw
