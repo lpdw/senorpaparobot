@@ -34,6 +34,11 @@ exports.updateById = (id, dataToUpdate) => {
 };
 
 // check if the asked products & quantities are in database
-exports.checkCommand = query => {
-    return null;
+exports.checkItem = query => {
+    return db.Products.findOne({
+        where: {
+            id: query.id,
+            quantity: {$gte:query.quantity}
+        }
+    });
 };

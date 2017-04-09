@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Hello World App
-host: senorpapa.herokuapp.com
+host: 127.0.0.1:8001
 # basePath prefixes all resource paths
 basePath: /
 #

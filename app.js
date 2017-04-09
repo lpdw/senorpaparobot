@@ -17,6 +17,7 @@ var login = require('./routes/login');
 var logout = require('./routes/logout');
 var products = require('./routes/products');
 var command = require('./routes/command');
+var test = require('./routes/test');
 
 var passport = require('passport');
 var authentication = require('./services/authentication');
@@ -98,6 +99,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/products', products);
 app.use('/command', command);
+app.use('/test', test);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
