@@ -13,17 +13,20 @@ router.post('/', function(req, res, next) {
         ProductService.checkItem(test)
             .then((result) => {
                 if (!result) {
-                    console.log('not result');
                     return callback('Element non trouvé');
                 } else {
                     return callback(null,result);
                 }
             })
     }, function(err, result) {
+
+        if(err){
+            return res.status(400).send('Une ou plusieurs ressources ne sont pas disponibles');
+        }
         if(result){
             let p = new Promise((resolve, reject) => {
                 request({
-                    url: "http://127.0.0.1:8001/test",
+                    url: "http://127.0.0.1:8001/",
                     method: "POST",
                     json: true,
                     headers: {
