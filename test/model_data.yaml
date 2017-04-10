@@ -1,0 +1,32 @@
+# /login POST
+{
+  "username": "test",
+  "password": "test"
+}
+
+# /product POST
+{
+  "name": "Banana",
+  "quantity": "8",
+  "price": "2.9",
+  "type": "Fruit"
+}
+
+# /command POST
+{ "id_commande": "5",
+  "data":
+   [
+    { "id": "3",
+       "name": "Pommedeterre",
+       "quantity": "2",
+       "type": "legume",
+       "price": "0.99"
+     },
+     { "id": 2,
+       "name": "Tomate",
+       "quantity": "4",
+       "type": "fruit",
+       "price": "1.1"
+    }
+  ]
+}
