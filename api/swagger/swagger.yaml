@@ -204,7 +204,7 @@ paths:
           description: Accept Header should be application/json or text/html
           schema:
             $ref: '#/definitions/Error'
-            
+
     delete:
       summary: Delete the product according the given Id
       parameters:
@@ -229,6 +229,38 @@ paths:
           description: Accept Header should be application/json or text/html
           schema:
             $ref: '#/definitions/Error'
+
+  /command:
+    post:
+      summary: Pass a command
+      description: This endpoint check if the sent product list exists in database. If so, delete concerned items and send the id command back
+      parameters:
+      - in: body
+        name: body
+        description: Product list
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Products'
+      - name: "authorization"
+        in: "header"
+        description: "Token for authorization"
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+        400:
+          description: Product not here
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: Bad JSON format
+          schema:
+            $ref: '#/definitions/Error'
+
+
 
   /swagger:
     x-swagger-pipe: swagger_raw

@@ -123,4 +123,5 @@ router.get('/type/:type', (req, res) => {
     });
 });
 
+
 module.exports = router;
