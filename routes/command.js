@@ -47,7 +47,7 @@ router.post('/', function(req, res, next) {
 
                     let p = new Promise((resolve, reject) => {
                         request({
-                            url: "http://localhost:8001/test",
+                            url: "https://senorpapa.herokuapp.com/test",
                             method: "POST",
                             json: true,
                             headers: {
