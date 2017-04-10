@@ -3,27 +3,9 @@ const _ = require('lodash');
 const router = express.Router();
 const ProductService = require('../services/productService');
 const APIError = require('../lib/apiError');
+const Sequelize = require('sequelize');
 
-const productBodyVerification = (req, res, next) => {
-    const mandatoryAttributes = ['name', 'quantity', 'type', 'price'];
-    let error = null;
-
-    const attributes = _.keys(req.body);
-    if (_.some(mandatoryAttributes, key => _.isEmpty(req.body[key]))) {
-        error = new APIError(400, `${mandatoryAttributes.toString()} fields are mandatory`);
-    }
-    if (!req.accepts('text/html') && error) {
-        return next(new APIError(400, error));
-    }
-    if (error) {
-        req.session.err = error;
-        req.session.product = req.body;
-        return res.redirect('/products/add');
-    }
-    next();
-};
-
-router.post('/', productBodyVerification, (req, res, next) => {
+router.post('/', (req, res, next) => {
     return ProductService.create(req.body)
         .then(product => {
             if (req.accepts('text/html')) {
@@ -33,8 +15,9 @@ router.post('/', productBodyVerification, (req, res, next) => {
                 return res.status(201).send(product);
             }
         })
-        .catch(next)
-        ;
+        .catch(Sequelize.ValidationError, err => {
+            res.status(400).json(err.errors[0].message);   // responds with validation errors
+        });
 });
 
 router.get('/', (req, res, next) => {

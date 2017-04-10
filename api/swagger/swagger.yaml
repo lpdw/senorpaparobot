@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Hello World App
-host: 127.0.0.1:8001
+host: senorpapa.herokuapp.com
 # basePath prefixes all resource paths
 basePath: /
 #
@@ -12,10 +12,11 @@ schemes:
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
+  # - text/html
   - application/json
 # format of the responses to the client (Accepts)
 produces:
-  - text/html
+  # - text/html
   - application/json
 paths:
   /products:
@@ -63,12 +64,6 @@ paths:
               type: number
             type:
               type: string
-            createdAt:
-              type: string
-              format: date
-            updatedAt:
-              type: string
-              format: date
       - name: "authorization"
         in: "header"
         description: "Token for authorization"
