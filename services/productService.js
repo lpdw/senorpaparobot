@@ -42,3 +42,11 @@ exports.checkItem = query => {
         }
     });
 };
+
+exports.findByQuery = query => {
+    return db.Products.findOne(
+        { where: {
+        id: query.id,
+    } });
+};
+
