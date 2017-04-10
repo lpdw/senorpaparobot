@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const router = express.Router();
 const async = require('async');
 const request = require('request');
@@ -47,7 +47,7 @@ router.post('/', function(req, res, next) {
 
                     let p = new Promise((resolve, reject) => {
                         request({
-                            url: "https://eDelivery.herokuapp.com/commands",
+                            url: "https://eat-delivery.herokuapp.com/commands",
                             method: "POST",
                             json: true,
                             headers: {
@@ -63,7 +63,7 @@ router.post('/', function(req, res, next) {
                     });
                     p.then( product =>
                         {
-                            return res.status(200).send(product);
+                            return res.status(200).json(product);
                         }
                     ).catch()
 
