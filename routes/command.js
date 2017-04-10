@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var async = require('async');
-var request = require('request');
+const express = require('express');
+const router = express.Router();
+const async = require('async');
+const request = require('request');
 const _ = require('lodash');
 const ProductService = require('../services/productService');
 const APIError = require('../lib/apiError');
@@ -47,12 +47,11 @@ router.post('/', function(req, res, next) {
 
                     let p = new Promise((resolve, reject) => {
                         request({
-                            url: "https://senorpapa.herokuapp.com/test",
+                            url: "https://eDelivery.herokuapp.com/commands",
                             method: "POST",
                             json: true,
                             headers: {
-                                "content-type": "application/json",
-                                "authorization": "lpdw-2016"
+                                "content-type": "application/json"
                             },
                             body: req.body
                         }, (error, response, body) => {
