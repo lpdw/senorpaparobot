@@ -7,19 +7,19 @@ const APIError = require('../lib/apiError');
 
 router.get('/', (req, res, next) => {
     const err = (req.session.err) ? req.session.err : null;
-    if (req.accepts('text/html')) {
-        return res.render('signup', {err});
-    }
-    next(new APIError(406, 'Not valid type for asked ressource'));
+if (req.accepts('text/html')) {
+    return res.render('signup', {err});
+}
+next(new APIError(406, 'Not valid type for asked ressource'));
 });
 
 const bodyVerificator = (req, res, next) => {
-    if (req.body.username && req.body.password && req.body.displayName) {
+    if (req.body.username && req.body.password && req.body.firstName && req.body.lastName && req.body.farmName) {
         return next();
     }
 
     const attributes = _.keys(req.body);
-    const mandatoryAttributes = ['username', 'password', 'displayName'];
+    const mandatoryAttributes = ['username', 'password', 'firstname','lastname','farmname'];
     const missingAttributes = _.difference(mandatoryAttributes, attributes);
     const emptyAttributes = _.filter(mandatoryAttributes, key => _.isEmpty(req.body[key]));
 
@@ -40,35 +40,35 @@ const bodyVerificator = (req, res, next) => {
 
 router.post('/', bodyVerificator, (req, res, next) => {
     if (!req.accepts('application/json') && !req.accepts('text/html')) {
-        return next(new APIError(406, 'Not valid type for asked ressource'));
+    return next(new APIError(406, 'Not valid type for asked ressource'));
+}
+
+UserService.findOneByQuery({username: req.body.username})
+    .then(user => {
+    if (user) {
+        return Promise.reject(new APIError(409, 'Existing user'));
     }
 
-    UserService.findOneByQuery({username: req.body.username})
-        .then(user => {
-            if (user) {
-                return Promise.reject(new APIError(409, 'Existing user'));
-            }
+    const salt = bcrypt.genSaltSync(10);
+const hash = bcrypt.hashSync(req.body.password, salt);
 
-            const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(req.body.password, salt);
-
-            req.body.password = hash;
-            return UserService.createUser(req.body);
-        })
-        .then(user => {
-            if (req.accepts('text/html')) {
-                return res.render('registered', {user: _.omit(user.dataValues, 'password')});
-            }
-            return res.status(200).send(_.omit(user.dataValues, 'password'));
-        })
-        .catch(error => {
-            if (req.accepts('text/html')) {
-                req.session.err = error.message;
-                return res.redirect('/signup');
-            } else {
-                return next(error);
-            }
-        });
+req.body.password = hash;
+return UserService.createUser(req.body);
+})
+.then(user => {
+    if (req.accepts('text/html')) {
+    return res.render('registered', {user: _.omit(user.dataValues, 'password')});
+}
+return res.status(200).send(_.omit(user.dataValues, 'password'));
+})
+.catch(error => {
+    if (req.accepts('text/html')) {
+    req.session.err = error.message;
+    return res.redirect('/signup');
+} else {
+    return next(error);
+}
+});
 });
 
 module.exports = router;
