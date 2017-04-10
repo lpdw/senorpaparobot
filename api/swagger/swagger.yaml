@@ -89,6 +89,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+
     delete:
       summary: Delete all products
       parameters:
@@ -205,7 +206,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-    delete:
+    delete/{id}:
       summary: Delete the product according the given Id
       parameters:
       - name: "id"
