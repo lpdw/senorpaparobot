@@ -8,7 +8,7 @@ const APIError = require('../lib/apiError');
 
 // recieving a command
 router.post('/', function(req, res, next) {
-
+    if (req.accepts('application/json')) {
     async.every(req.body.data,function(test,callback){
         ProductService.checkItem(test)
             .then((result) => {
@@ -19,14 +19,13 @@ router.post('/', function(req, res, next) {
                 }
             })
     }, function(err, result) {
-
         if(err){
             return res.status(400).send('Une ou plusieurs ressources ne sont pas disponibles');
         }
         if(result){
             let p = new Promise((resolve, reject) => {
                 request({
-                    url: "http://127.0.0.1:8001/",
+                    url: "http://localhost:8001/commands",
                     method: "POST",
                     json: true,
                     headers: {
@@ -41,13 +40,17 @@ router.post('/', function(req, res, next) {
                     return resolve(response);
                 })
             });
-            p.then( product => {
+            p.then( product =>
+                {
                     return res.status(200).json(product);
                 }
             ).catch()
 
         }
     });
+    } else {
+        return res.status(406).json("bad accept request");
+    }
 });
 
 
